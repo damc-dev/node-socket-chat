@@ -31,6 +31,31 @@
             border: none;
             padding: 10px;
         }
+        #container {
+            width: 960px; 
+            margin: 0 auto;
+            background: #fff;
+            border-style: solid;
+            border-color: black;
+        }
+        #content {
+         overflow: auto;
+        }
+        #content .sidebar {
+            width:25%;
+            float: left;
+            background: #dadada;
+        }
+        #users {
+            list-style-type: none;
+            font-size: 16px;
+
+        }
+        #content #main {
+            width: 75%;
+            float: left;
+            
+        }
         #messages {
             list-style-type: none;
             margin: 0;
@@ -46,20 +71,32 @@
 </head>
 
 <body>
-    <ul id="messages"></ul>
+    <div id="container">
+        <div id="content">
+            <div class="sidebar">
+                <ul id="users"></ul>
+            </div>
+            <div id="main">
+                <ul id="messages"></ul>
+            </div>
+        </div>
+    </div>
     <form action="">
         <input id="m" autocomplete="off" />
         <button>Send</button>
     </form>
+
     <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             var socket = io();
-            
-            socket.on('connect', function(data) {
-                getName(function(name) {
-                    socket.emit('user:connected', {'name': name});
+
+            socket.on('connect', function (data) {
+                getName(function (name) {
+                    socket.emit('user:connected', {
+                        'name': name
+                    });
                 });
             });
 
@@ -69,6 +106,7 @@
             socket.on('user:joined', function (user) {
                 console.log(user.name + ' has joined');
                 $('#messages').append($('<li>').text(user.name + ' has joined'));
+                $('#users').append($('<li>').text(user.name));
             });
 
             $('form').submit(function () {
@@ -76,16 +114,15 @@
                 $('#m').val('');
                 return false;
             });
-            
+
             function getName(callBack) {
                 var name = prompt("Please enter user name", "Bob");
-                if(name != null) {
+                if (name != null) {
                     console.log("Name prompt input: " + name);
                     callBack(name);
-                }  
+                }
             }
         });
-        
     </script>
 </body>
 
